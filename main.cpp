@@ -2,5 +2,5 @@
 
 int main(void) {
 
-    return lesson_4_2::main_1();
+    return lesson_4_2::main_2();
 }
