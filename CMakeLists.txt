@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(hello-vsc)
 
-set(SOURCE main.cpp)
+set(SOURCE main.cpp lesson_6.1.h)
 
 add_executable(hello-vsc ${SOURCE})
 
