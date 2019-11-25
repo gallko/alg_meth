@@ -1,6 +1,6 @@
-#include "lesson_6.1.h"
+#include "lesson_6.4.h"
 
 int main(void) {
 
-    return lesson_6_1::main_1();
+    return lesson_6_4::main_1();
 }
