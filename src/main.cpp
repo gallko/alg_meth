@@ -1,0 +1,5 @@
+#include "lesson_6.5.h"
+
+int main(int argc, char **argv) {
+    return 0;
+}
