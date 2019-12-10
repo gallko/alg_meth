@@ -1,35 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(alg_struct)
+project(StepikAlgorithmsStructures VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-
-# Download and unpack googletest at configure time
-configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-        RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-    message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-        RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-    message(FATAL_ERROR "Build step for googletest failed: ${result}")
-endif()
+set(EXTERNAL_LIB ext_lib)
 
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include_directories(src)
-
 add_subdirectory(src)
-add_subdirectory(test)
 
 # Add googletest directly to our build. This defines
 # the gtest and gtest_main targets.
-add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+add_subdirectory(${EXTERNAL_LIB}/googletest
         ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
         EXCLUDE_FROM_ALL)
