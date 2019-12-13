@@ -1,4 +1,4 @@
 [submodule "googletest"]
-	path = ext_lib/googletest
+	path = googletest
 	url = https://github.com/google/googletest
 	branch = master
