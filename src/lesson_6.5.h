@@ -46,9 +46,48 @@ namespace lesson_6_5 {
         }
     };
 
+    template<template<typename, typename...> class S, typename T, typename ..._args>
+    struct helper_count_if {
+        using iterator = typename S<T, _args...>::iterator;
+        template<class _compare>
+        iterator count_if(iterator first, iterator last, const _compare &comparator) {
+
+            iterator it;
+            typename std::iterator_traits<iterator>::difference_type count, step;
+            count = std::distance(first, last);
+
+            while(count > 0) {
+                it = first;
+                step = count/2;
+                std::advance (it, step);
+                if (comparator(*it)) {
+                    first = ++it;
+                    count -= step;
+                } else count = step;
+            }
+            return first;
+        }
+    };
+
     template<template<class, class...> class S, class T, class _compare, class... _args>
     void quick_sort(S<T, _args...> &m, const _compare &comparator) {
         helper_qsort<S, T, _args...>::sort(m.begin(), m.end(), comparator);
+    }
+
+    template <class ForwardIterator, class T, class _compare>
+    size_t count_if(ForwardIterator first, ForwardIterator last, const T& val, _compare comp = std::less<int>()) {
+        ForwardIterator middle;
+        typename std::iterator_traits<ForwardIterator>::difference_type count, step;
+        count = std::distance(first, last);
+        while (count > 0) {
+            step = count / 2;
+            middle = std::next(first, step);
+            if (comp(*middle, val)) {
+                first = ++middle;
+                count -= step+1;
+            } else count = step;
+        }
+        return std::distance(first, last);
     }
 
     int main_1() {
