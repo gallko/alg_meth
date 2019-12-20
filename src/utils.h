@@ -11,7 +11,7 @@
 #include <cassert>
 
 template<template <typename, typename> class C, typename F, typename S>
-typename std::enable_if< std::is_base_of<std::__pair_base<F,S>, C<F,S> >::value, std::istream &>::
+typename std::enable_if< std::is_base_of<std::pair<F,S>, C<F,S> >::value, std::istream &>::
 type operator>>(std::istream &is, C<F, S> &pair) {
     is >> pair.first >> pair.second;
     return is;

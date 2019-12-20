@@ -7,6 +7,7 @@
 
 #include "utils.h"
 #include <fstream>
+#include <complex>
 
 namespace lesson_6_5 {
     using point2d = std::pair<int, int>;
@@ -46,36 +47,13 @@ namespace lesson_6_5 {
         }
     };
 
-    template<template<typename, typename...> class S, typename T, typename ..._args>
-    struct helper_count_if {
-        using iterator = typename S<T, _args...>::iterator;
-        template<class _compare>
-        iterator count_if(iterator first, iterator last, const _compare &comparator) {
-
-            iterator it;
-            typename std::iterator_traits<iterator>::difference_type count, step;
-            count = std::distance(first, last);
-
-            while(count > 0) {
-                it = first;
-                step = count/2;
-                std::advance (it, step);
-                if (comparator(*it)) {
-                    first = ++it;
-                    count -= step;
-                } else count = step;
-            }
-            return first;
-        }
-    };
-
     template<template<class, class...> class S, class T, class _compare, class... _args>
     void quick_sort(S<T, _args...> &m, const _compare &comparator) {
         helper_qsort<S, T, _args...>::sort(m.begin(), m.end(), comparator);
     }
 
     template <class ForwardIterator, class T, class _compare>
-    size_t count_if(ForwardIterator first, ForwardIterator last, const T& val, _compare comp = std::less<int>()) {
+    ForwardIterator get_position(ForwardIterator first, ForwardIterator last, const T& val, _compare comp) {
         ForwardIterator middle;
         typename std::iterator_traits<ForwardIterator>::difference_type count, step;
         count = std::distance(first, last);
@@ -87,13 +65,22 @@ namespace lesson_6_5 {
                 count -= step+1;
             } else count = step;
         }
-        return std::distance(first, last);
+        return first;
+    }
+
+    template <class ForwardIterator, class T, class _compare = std::less_equal<int>>
+    size_t count_less_equal(ForwardIterator first, ForwardIterator last, const T& val, _compare comp = std::less_equal<int>()) {
+        auto tmp = get_position(first, last, val, comp);
+        return std::distance(first, tmp);
+    }
+
+    template <class ForwardIterator, class T, class _compare = std::less<int>>
+    size_t count_greater_equal(ForwardIterator first, ForwardIterator last, const T& val, _compare comp = std::less<int>()) {
+        auto tmp = get_position(first, last, val, comp);
+        return std::distance(tmp, last);
     }
 
     int main_1() {
-        std::ifstream in("a.txt");
-        std::cin.rdbuf(in.rdbuf());
-
         int n = 0, m = 0;
         std::cin >> n >> m;
         std::vector<point2d> segments(n);
@@ -106,7 +93,6 @@ namespace lesson_6_5 {
             ref_segments.emplace_back(it);
         }
         std::cin >> points;
-
         quick_sort(segments, [](const point2d& p1, const point2d& p2) -> int {
             if (p1.first == p2.first) return 0;
             if (p1.first > p2.first) return 1;
@@ -118,9 +104,16 @@ namespace lesson_6_5 {
             return -1;
         });
 
-        std::cout << "real: " << segments << std::endl;
-        std::cout << "ref : " << ref_segments << std::endl;
-        std::cout << points << std::endl;
+        for(const auto &it: points) {
+            int64_t r1 = count_less_equal(segments.begin(), segments.end(), it, [](const point2d& p, const int& el) -> bool {
+                return p.first <= el;
+            });
+            int64_t r2 = count_less_equal(ref_segments.begin(), ref_segments.end(), it, [](const ref_point2d& p, const int& el) -> bool {
+                return p.get().second < el;
+            });
+            std::cout << r1 - r2 << " ";
+        }
+
         return 0;
     }
 }
