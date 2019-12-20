@@ -8,11 +8,9 @@
 #include "utils.h"
 #include <fstream>
 #include <complex>
+#include <algorithm>
 
 namespace lesson_6_5 {
-    using point2d = std::pair<int, int>;
-    using ref_point2d = std::reference_wrapper<point2d>;
-
     template<template<typename, typename...> class S, typename T, typename ..._args>
     struct helper_qsort {
         using iterator = typename S<T, _args...>::iterator;
@@ -53,7 +51,7 @@ namespace lesson_6_5 {
     }
 
     template <class ForwardIterator, class T, class _compare>
-    ForwardIterator get_position(ForwardIterator first, ForwardIterator last, const T& val, _compare comp) {
+    ForwardIterator get_position(ForwardIterator first, ForwardIterator last, const T& val, const _compare &comp) {
         ForwardIterator middle;
         typename std::iterator_traits<ForwardIterator>::difference_type count, step;
         count = std::distance(first, last);
@@ -80,39 +78,52 @@ namespace lesson_6_5 {
         return std::distance(tmp, last);
     }
 
+
+    template <class ForwardIterator, class _compare>
+    std::tuple<ForwardIterator, ForwardIterator> partition(ForwardIterator first, ForwardIterator last, const _compare &comparator) {
+        auto middle = std::next(first, std::distance(first, last) >> 1);
+    }
+
+    template <class ForwardIterator, class _compare>
+    void qsort(ForwardIterator first, ForwardIterator last, const _compare &comp) {
+
+        ForwardIterator first_end, last_begin;
+        std::tie<ForwardIterator, ForwardIterator>(first_end, last_begin) =
+                partition(first, last);
+    }
+
     int main_1() {
         int n = 0, m = 0;
         std::cin >> n >> m;
-        std::vector<point2d> segments(n);
-        std::vector<ref_point2d> ref_segments;
-        ref_segments.reserve(n);
-
+        std::vector<int> begin(n);
+        std::vector<int> end(n);
         std::vector<int> points(m);
-        for(auto &it: segments) {
-            std::cin >> it;
-            ref_segments.emplace_back(it);
+        for(auto i = 0; i < n; ++i) {
+            std::cin >> begin[i];
+            std::cin >> end[i];
         }
-        std::cin >> points;
-        quick_sort(segments, [](const point2d& p1, const point2d& p2) -> int {
-            if (p1.first == p2.first) return 0;
-            if (p1.first > p2.first) return 1;
+        for(auto &p: points) {
+            std::cin >> p;
+        }
+
+        quick_sort(begin, [](const int& p1, const int& p2) -> int {
+            if (p1 == p2) return 0;
+            if (p1 > p2) return 1;
             return -1;
         });
-        quick_sort(ref_segments, [](const ref_point2d& p1, const ref_point2d& p2) -> int {
-            if (p1.get().second == p2.get().second) return 0;
-            if (p1.get().second > p2.get().second) return 1;
+        quick_sort(end, [](const int& p1, const int& p2) -> int {
+            if (p1 == p2) return 0;
+            if (p1 > p2) return 1;
             return -1;
         });
 
         for(const auto &it: points) {
-            int64_t r1 = count_less_equal(segments.begin(), segments.end(), it, [](const point2d& p, const int& el) -> bool {
-                return p.first <= el;
-            });
-            int64_t r2 = count_less_equal(ref_segments.begin(), ref_segments.end(), it, [](const ref_point2d& p, const int& el) -> bool {
-                return p.get().second < el;
-            });
+            auto r1 = count_less_equal(begin.begin(), begin.end(), it, std::less_equal<int>());
+            auto r2 = count_less_equal(end.begin(), end.end(), it, std::less<int>());
             std::cout << r1 - r2 << " ";
         }
+
+        std::sort()
 
         return 0;
     }

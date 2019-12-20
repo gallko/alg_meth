@@ -45,6 +45,10 @@ TEST_F(TestQuickSort, decreasing) {
     }
 }
 
+TEST(TestQTest, case_1) {
+    std::vector<int> v{};
+}
+
 TEST(TestCount_less_equal, case_1) {
     std::vector<int> in{1};
     EXPECT_EQ(lesson_6_5::count_less_equal(in.begin(), in.end(), 1), 1);
