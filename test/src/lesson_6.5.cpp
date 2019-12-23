@@ -46,7 +46,14 @@ TEST_F(TestQuickSort, decreasing) {
 }
 
 TEST(TestQTest, case_1) {
-    std::vector<int> v{};
+    std::vector<int> v{7,2,4,2,2,1};
+    lesson_6_5::qsort(v.begin(), v.end(), [](const int &op, const int &el){
+        if (op == el) return 0;
+        if (el > op) return 1;
+        return -1;
+    });
+    auto r = std::vector<int>{2,2,2,7};
+    EXPECT_EQ(v, r);
 }
 
 TEST(TestCount_less_equal, case_1) {
