@@ -1,5 +1,5 @@
-#include "lesson_6.5.h"
+#include "lesson_6.8.h"
 
 int main(int argc, char **argv) {
-    return lesson_6_5::main_1();
+    return lesson_6_8::main_1();
 }
