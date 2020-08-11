@@ -25,4 +25,3 @@ add_subdirectory(test)
 add_subdirectory(${EXTERNAL_LIB}/googletest
         ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
         EXCLUDE_FROM_ALL)
-
